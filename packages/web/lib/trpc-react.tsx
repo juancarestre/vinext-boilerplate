@@ -6,9 +6,21 @@ import { createTRPCReact, httpBatchLink } from "@trpc/react-query";
 import type { AppRouter } from "@vinext-boilerplate/api";
 
 export const trpc = createTRPCReact<AppRouter>();
+const DEFAULT_PROD_API_URL = "https://vinext-api.peto.dev";
 
 function getBaseUrl() {
-  return import.meta.env.VITE_API_URL ?? "http://localhost:8787";
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host === "localhost" || host === "127.0.0.1") {
+      return "http://localhost:8787";
+    }
+  }
+
+  return DEFAULT_PROD_API_URL;
 }
 
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
