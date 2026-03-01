@@ -8,10 +8,21 @@ export const metadata = {
 };
 
 export default async function TrpcDemoPage() {
-  const [users, posts] = await Promise.all([
-    api.users.list.query(),
-    api.posts.list.query(),
-  ]);
+  let users: Awaited<ReturnType<typeof api.users.list.query>> = [];
+  let posts: Awaited<ReturnType<typeof api.posts.list.query>> = [];
+  let loadError = false;
+
+  try {
+    [users, posts] = await Promise.all([
+      api.users.list.query(),
+      api.posts.list.query(),
+    ]);
+  } catch (error) {
+    loadError = true;
+    console.error("[trpc-demo] Failed to fetch server-side data", {
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 
   return (
     <PageShell
@@ -27,6 +38,12 @@ export default async function TrpcDemoPage() {
     >
       {/* Server-rendered stats */}
       <section className="mb-8">
+        {loadError ? (
+          <div className="mb-4 rounded-lg border border-amber/40 bg-amber/10 px-3 py-2 text-sm text-amber">
+            No se pudo cargar el API en server render. Revisa `VITE_API_URL` y la
+            disponibilidad de `https://vinext-api.peto.dev`.
+          </div>
+        ) : null}
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
           Server Component — pre-renderizado
         </h2>
