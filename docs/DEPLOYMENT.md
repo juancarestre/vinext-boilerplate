@@ -29,15 +29,15 @@ Cada uno tiene su propio `wrangler.jsonc` con su configuración.
 ## Paso 1: Instalar dependencias
 
 ```bash
-npm install
+pnpm install
 ```
 
-Esto instala todo el monorepo (shared, api, web) gracias a npm workspaces.
+Esto instala todo el monorepo (shared, api, web) gracias a pnpm workspaces.
 
 ## Paso 2: Desplegar el API Worker
 
 ```bash
-npm run deploy -w packages/api
+pnpm run deploy:api
 ```
 
 Esto ejecuta `wrangler deploy` en el paquete API. Wrangler:
@@ -65,7 +65,7 @@ VITE_API_URL=https://api.tudominio.com
 ## Paso 4: Desplegar el Web Worker
 
 ```bash
-npm run deploy -w packages/web
+pnpm run deploy:web
 ```
 
 Esto ejecuta `vite build && wrangler deploy` en el paquete web. El proceso:
@@ -93,7 +93,7 @@ cors({
 Luego re-despliega el API:
 
 ```bash
-npm run deploy -w packages/api
+pnpm run deploy:api
 ```
 
 ## Deploy todo de una vez
@@ -101,12 +101,32 @@ npm run deploy -w packages/api
 Puedes desplegar ambos workers con un solo comando:
 
 ```bash
-npm run deploy
+pnpm run deploy
 ```
 
-Esto ejecuta `npm run deploy --workspaces --if-present`, que despliega cada paquete que tenga script `deploy`.
+Esto ejecuta `pnpm -r --if-present deploy`, que despliega cada paquete que tenga script `deploy`.
 
 **Importante**: Asegúrate de tener `VITE_API_URL` configurado en `packages/web/.env` ANTES de ejecutar esto, porque el build del frontend necesita saber la URL del API.
+
+## Deploy con integración Cloudflare + GitHub (monorepo con 2 workers)
+
+Conecta **dos proyectos Workers distintos** al mismo repositorio de GitHub (uno para `api` y otro para `web`).
+
+### Worker API (`vinext-boilerplate-api`)
+1. En Cloudflare Workers, crea/conecta el worker al repo.
+2. Configura:
+   - **Root directory**: `packages/api`
+   - **Build command**: `pnpm -C ../.. install --frozen-lockfile`
+   - **Deploy command**: `pnpm -C ../.. run deploy:api`
+
+### Worker Web (`vinext-boilerplate`)
+1. Crea/conecta un segundo worker al mismo repo.
+2. Configura:
+   - **Root directory**: `packages/web`
+   - **Build command**: `pnpm -C ../.. install --frozen-lockfile`
+   - **Deploy command**: `pnpm -C ../.. run deploy:web`
+
+Con `pnpm -C ../..` ejecutas los comandos desde la raíz del monorepo para que funcionen las dependencias internas `workspace:*`.
 
 ## Custom Domains
 
@@ -141,10 +161,10 @@ Para setear variables de entorno (secrets) en el worker desplegado:
 
 ```bash
 # Para el API worker
-npx wrangler secret put API_KEY -w packages/api
+pnpm --filter @vinext-boilerplate/api exec wrangler secret put API_KEY
 
 # Para el web worker
-npx wrangler secret put SOME_SECRET -w packages/web
+pnpm --filter @vinext-boilerplate/web exec wrangler secret put SOME_SECRET
 ```
 
 ## Bindings (D1, KV, R2)

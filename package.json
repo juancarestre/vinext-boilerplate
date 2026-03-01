@@ -2,14 +2,16 @@
   "name": "vinext-boilerplate",
   "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "packageManager": "pnpm@10.29.3",
   "scripts": {
-    "dev": "npm run dev --workspaces --if-present",
-    "dev:web": "npm run dev -w packages/web",
-    "dev:api": "npm run dev -w packages/api",
-    "build": "npm run build --workspaces --if-present",
-    "deploy": "npm run deploy --workspaces --if-present"
+    "dev": "pnpm -r --parallel --if-present dev",
+    "dev:web": "pnpm --filter @vinext-boilerplate/web dev",
+    "dev:api": "pnpm --filter @vinext-boilerplate/api dev",
+    "build:api": "pnpm --filter @vinext-boilerplate/api build",
+    "build:web": "pnpm --filter @vinext-boilerplate/web build",
+    "build": "pnpm -r --if-present build",
+    "deploy:api": "pnpm --filter @vinext-boilerplate/api deploy",
+    "deploy:web": "pnpm --filter @vinext-boilerplate/web deploy",
+    "deploy": "pnpm -r --if-present deploy"
   }
 }

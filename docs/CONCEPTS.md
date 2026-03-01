@@ -22,7 +22,7 @@ Dos workers independientes que comparten tipos via un paquete común.
 ## Monorepo: por qué y cómo
 
 ### Qué es
-Un solo repositorio con múltiples paquetes que se pueden referenciar entre sí. Usamos **npm workspaces** (nativo de npm, sin necesidad de tools extra como Turborepo).
+Un solo repositorio con múltiples paquetes que se pueden referenciar entre sí. Usamos **pnpm workspaces** para resolver dependencias internas de forma local y eficiente.
 
 ### Los 3 paquetes
 
@@ -33,9 +33,9 @@ Un solo repositorio con múltiples paquetes que se pueden referenciar entre sí.
 | `packages/web` | El frontend: renderiza páginas, llama al API | Sí — como Cloudflare Worker |
 
 ### Cómo se conectan
-En el `package.json` raíz hay `"workspaces": ["packages/*"]`. Esto le dice a npm que los paquetes dentro de `packages/` se pueden importar entre sí como si fueran librerías de npm, pero sin publicar nada — la resolución es local.
+En `pnpm-workspace.yaml` definimos `packages/*`. Esto le dice a pnpm que los paquetes dentro de `packages/` se pueden importar entre sí como si fueran librerías publicadas, pero sin publicar nada: la resolución es local.
 
-Cuando en el API escribes `import { UserSchema } from "@vinext-boilerplate/shared"`, npm resuelve eso al código fuente en `packages/shared/src/`.
+Cuando en el API escribes `import { UserSchema } from "@vinext-boilerplate/shared"`, pnpm resuelve eso al código fuente en `packages/shared/src/`.
 
 ## Vinext: qué es y por qué
 

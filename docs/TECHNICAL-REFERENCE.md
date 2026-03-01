@@ -16,13 +16,14 @@
 | Validation | Zod | 4.x | Shared schemas for data validation in API and frontend |
 | Client state | TanStack React Query | 5.x | Cache, refetch, mutations for tRPC client components |
 | Runtime | Cloudflare Workers | — | Two separate workers: one for web, one for API |
-| Package manager | npm workspaces | — | Monorepo with three packages |
+| Package manager | pnpm workspaces | — | Monorepo with three packages |
 
 ## Monorepo Structure
 
 ```
 vinext-boilerplate/
-├── package.json                          # Root: workspaces config + dev scripts
+├── package.json                          # Root scripts (dev/build/deploy) for all workspaces
+├── pnpm-workspace.yaml                   # Workspace package discovery (packages/*)
 ├── docs/
 │   ├── TECHNICAL-REFERENCE.md            # This file
 │   ├── DEPLOYMENT.md                     # How to deploy with wrangler
