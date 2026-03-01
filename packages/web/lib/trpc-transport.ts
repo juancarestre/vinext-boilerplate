@@ -8,7 +8,37 @@ function isLocalHostname(hostname: string) {
   return hostname === "localhost" || hostname === "127.0.0.1";
 }
 
+function deriveApiBaseFromWebHostname(hostname: string): string | null {
+  if (isLocalHostname(hostname)) {
+    return DEV_API_URL;
+  }
+
+  // Worker preview URLs:
+  // <preview>-vinext-boilerplate-web.<subdomain>.workers.dev
+  if (hostname.includes("-vinext-boilerplate-web.")) {
+    return `https://${hostname.replace(
+      "-vinext-boilerplate-web.",
+      "-vinext-boilerplate-api."
+    )}`;
+  }
+
+  // Project custom domain convention:
+  // vinext.<domain> -> vinext-api.<domain>
+  if (hostname.startsWith("vinext.")) {
+    return `https://${hostname.replace(/^vinext\./, "vinext-api.")}`;
+  }
+
+  return null;
+}
+
 export function getExternalApiBaseUrl(side: RuntimeSide): string {
+  if (side === "client" && typeof window !== "undefined") {
+    const derived = deriveApiBaseFromWebHostname(window.location.hostname);
+    if (derived) {
+      return derived;
+    }
+  }
+
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
