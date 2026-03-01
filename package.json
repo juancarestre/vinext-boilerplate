@@ -4,14 +4,14 @@
   "private": true,
   "packageManager": "pnpm@10.29.3",
   "scripts": {
-    "dev": "pnpm -r --parallel --if-present dev",
-    "dev:web": "pnpm --filter @vinext-boilerplate/web dev",
-    "dev:api": "pnpm --filter @vinext-boilerplate/api dev",
-    "build:api": "pnpm --filter @vinext-boilerplate/api build",
-    "build:web": "pnpm --filter @vinext-boilerplate/web build",
-    "build": "pnpm -r --if-present build",
-    "deploy:api": "pnpm --filter @vinext-boilerplate/api deploy",
-    "deploy:web": "pnpm --filter @vinext-boilerplate/web deploy",
-    "deploy": "pnpm -r --if-present deploy"
+    "dev": "pnpm -r --parallel --if-present run dev",
+    "dev:web": "pnpm --filter @vinext-boilerplate/web run dev",
+    "dev:api": "pnpm --filter @vinext-boilerplate/api run dev",
+    "build:api": "pnpm --filter @vinext-boilerplate/api run build",
+    "build:web": "pnpm --filter @vinext-boilerplate/web run build",
+    "build": "pnpm -r --if-present run build",
+    "deploy:api": "pnpm --filter @vinext-boilerplate/api run deploy",
+    "deploy:web": "pnpm --filter @vinext-boilerplate/web run deploy",
+    "deploy": "pnpm -r --if-present run deploy"
   }
 }
