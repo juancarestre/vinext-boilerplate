@@ -1,0 +1,16 @@
+{
+  "name": "@vinext-boilerplate/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./models": "./src/models/index.ts"
+  },
+  "dependencies": {
+    "zod": "^4.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  }
+}
