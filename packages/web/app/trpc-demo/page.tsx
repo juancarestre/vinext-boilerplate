@@ -40,8 +40,15 @@ export default async function TrpcDemoPage() {
       <section className="mb-8">
         {loadError ? (
           <div className="mb-4 rounded-lg border border-amber/40 bg-amber/10 px-3 py-2 text-sm text-amber">
-            No se pudo cargar el API en server render. Revisa `VITE_API_URL` y la
-            disponibilidad de `https://vinext-api.peto.dev`.
+            <p>
+              No se pudo cargar el API en server render. Revisa `VITE_API_URL` y la
+              disponibilidad de `https://vinext-api.peto.dev`.
+            </p>
+            <p className="mt-2">
+              <a className="underline decoration-amber/60 underline-offset-2" href="/trpc-demo">
+                Reintentar carga
+              </a>
+            </p>
           </div>
         ) : null}
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">

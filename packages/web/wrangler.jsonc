@@ -7,6 +7,9 @@
     "enabled": true,
     "head_sampling_rate": 1
   },
+  "vars": {
+    "VITE_API_URL": "https://vinext-api.peto.dev"
+  },
   "routes": [
     { "pattern": "vinext.peto.dev", "custom_domain": true }
   ],

@@ -1,14 +1,17 @@
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@vinext-boilerplate/api";
 
-const DEFAULT_PROD_API_URL = "https://vinext-api.peto.dev";
-
 function getBaseUrl() {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
 
-  // Client-side: local dev fallback
+  // Local dev fallback only.
+  if (import.meta.env.DEV) {
+    return "http://localhost:8787";
+  }
+
+  // Extra guard for local browser sessions.
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
     if (host === "localhost" || host === "127.0.0.1") {
@@ -16,8 +19,9 @@ function getBaseUrl() {
     }
   }
 
-  // Server-side (RSC in Workers): use production API domain by default
-  return DEFAULT_PROD_API_URL;
+  throw new Error(
+    "VITE_API_URL is required in production for server-side tRPC calls"
+  );
 }
 
 export const api = createTRPCClient<AppRouter>({
