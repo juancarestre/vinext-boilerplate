@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "vinext-boilerplate",
+  "name": "vinext-boilerplate-web",
   "compatibility_date": "2026-02-01",
   "compatibility_flags": ["nodejs_compat_v2"],
   // vinext provides a built-in entry point for App Router
