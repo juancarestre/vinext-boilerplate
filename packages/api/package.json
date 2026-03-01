@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "versions:upload:alias": "wrangler versions upload --preview-alias \"$(node ../../scripts/workers-preview-alias.mjs)\"",
+    "versions:upload:alias:dry": "wrangler versions upload --preview-alias \"$(node ../../scripts/workers-preview-alias.mjs)\" --dry-run"
   },
   "dependencies": {
     "hono": "^4.12.0",

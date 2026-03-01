@@ -6,19 +6,32 @@ import { appRouter } from "./router";
 import type { Context } from "./trpc";
 
 const app = new Hono();
+const webPreviewOriginPattern =
+  /^https:\/\/[a-z0-9-]+-vinext-boilerplate-web\.peto\.workers\.dev$/;
+const allowedOrigins = new Set([
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://vinext.peto.dev",
+  "https://vinext-boilerplate-api.peto.workers.dev",
+  "https://vinext-api.peto.dev",
+]);
 
 // Middleware
 app.use("*", logger());
 app.use(
   "*",
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:5173",
-      "https://vinext.peto.dev",
-      "https://vinext-boilerplate-api.peto.workers.dev",
-      "https://vinext-api.peto.dev",
-    ],
+    origin: (origin) => {
+      if (!origin) {
+        return undefined;
+      }
+
+      if (allowedOrigins.has(origin) || webPreviewOriginPattern.test(origin)) {
+        return origin;
+      }
+
+      return undefined;
+    },
     allowMethods: ["GET", "POST", "OPTIONS"],
     allowHeaders: ["Content-Type"],
   })
