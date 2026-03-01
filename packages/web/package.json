@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "deploy": "vite build && wrangler deploy"
+    "deploy": "vite build && wrangler deploy",
+    "versions:upload": "pnpm run build && wrangler versions upload --config dist/server/wrangler.json",
+    "versions:upload:dry": "pnpm run build && wrangler versions upload --config dist/server/wrangler.json --dry-run"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",

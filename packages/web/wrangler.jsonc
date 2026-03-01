@@ -13,16 +13,14 @@
   "routes": [
     { "pattern": "vinext.peto.dev", "custom_domain": true }
   ],
-  "build": {
-    "command": "pnpm run build"
-  },
   "services": [
     {
       "binding": "API_SERVICE",
       "service": "vinext-boilerplate-api"
     }
   ],
-  "main": "dist/server/index.js",
+  // vinext provides a built-in entry point for App Router
+  "main": "vinext/server/app-router-entry",
   "assets": {
     "binding": "ASSETS",
     "directory": "dist/client"
