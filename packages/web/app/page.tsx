@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { getLocale } from "@/lib/i18n-server";
 import {
   Card,
   CardHeader,
@@ -19,7 +20,10 @@ import {
   CloudCog,
 } from "lucide-react";
 
-export default function Home() {
+export default async function Home() {
+  const locale = await getLocale();
+  const isEs = locale === "es";
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
       {/* Hero */}
@@ -37,8 +41,9 @@ export default function Home() {
           <span className="text-primary"> Boilerplate</span>
         </h1>
         <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-          Monorepo full-stack: frontend Vinext + backend Hono/tRPC, ambos
-          desplegados como Cloudflare Workers con type safety end-to-end.
+          {isEs
+            ? "Monorepo full-stack: frontend Vinext + backend Hono/tRPC, ambos desplegados como Cloudflare Workers con type safety end-to-end."
+            : "Full-stack monorepo: Vinext frontend + Hono/tRPC backend, both deployed as Cloudflare Workers with end-to-end type safety."}
         </p>
       </header>
 
@@ -59,8 +64,9 @@ export default function Home() {
               <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary" />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed mb-4 max-w-lg">
-              Hono + tRPC backend Worker con React Query en el frontend. Modelos
-              Zod compartidos, queries/mutations interactivas, zero codegen.
+              {isEs
+                ? "Hono + tRPC backend Worker con React Query en el frontend. Modelos Zod compartidos, queries/mutations interactivas, zero codegen."
+                : "Hono + tRPC backend Worker with React Query in the frontend. Shared Zod models, interactive queries/mutations, zero codegen."}
             </p>
             <div className="flex gap-2 flex-wrap">
               {["Hono", "tRPC", "React Query", "Zod", "Monorepo"].map((t) => (
@@ -86,42 +92,42 @@ export default function Home() {
           href="/server-example"
           icon={<Server className="size-4" />}
           title="Server Component"
-          description="Async data, zero client JS"
+          description={isEs ? "Datos async, cero JS al cliente" : "Async data, zero client JS"}
           color="var(--color-emerald)"
         />
         <DemoCard
           href="/client-example"
           icon={<Monitor className="size-4" />}
           title="Client Component"
-          description="useState, event handlers"
+          description={isEs ? "useState, manejadores de eventos" : "useState, event handlers"}
           color="var(--color-violet)"
         />
         <DemoCard
           href="/streaming"
           icon={<Layers className="size-4" />}
           title="Streaming SSR"
-          description="Suspense, progressive render"
+          description={isEs ? "Suspense, render progresivo" : "Suspense, progressive render"}
           color="var(--color-sky)"
         />
         <DemoCard
           href="/error-example"
           icon={<AlertTriangle className="size-4" />}
           title="Error Boundary"
-          description="error.tsx con recovery"
+          description={isEs ? "error.tsx con recuperación" : "error.tsx with recovery"}
           color="var(--color-rose)"
         />
         <DemoCard
           href="/server-actions"
           icon={<FileText className="size-4" />}
           title="Server Actions"
-          description="'use server' forms"
+          description={isEs ? "formularios con 'use server'" : "'use server' forms"}
           color="var(--color-amber)"
         />
         <DemoCard
           href="/posts"
           icon={<Route className="size-4" />}
           title="Dynamic Routes"
-          description="[slug] params, notFound()"
+          description={isEs ? "params [slug], notFound()" : "[slug] params, notFound()"}
           color="var(--color-teal)"
         />
       </div>
@@ -132,14 +138,14 @@ export default function Home() {
         style={{ animationDelay: "0.3s" }}
       >
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-          Stack
+          {isEs ? "Stack" : "Stack"}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             { icon: <Zap className="size-4" />, label: "Vinext", sub: "Vite + RSC" },
-            { icon: <CloudCog className="size-4" />, label: "Workers", sub: "Edge global" },
-            { icon: <Server className="size-4" />, label: "Hono", sub: "API framework" },
-            { icon: <Layers className="size-4" />, label: "tRPC", sub: "Type safety" },
+            { icon: <CloudCog className="size-4" />, label: "Workers", sub: isEs ? "Edge global" : "Global edge" },
+            { icon: <Server className="size-4" />, label: "Hono", sub: isEs ? "Framework API" : "API framework" },
+            { icon: <Layers className="size-4" />, label: "tRPC", sub: isEs ? "Seguridad de tipos" : "Type safety" },
           ].map((item) => (
             <div
               key={item.label}
@@ -161,10 +167,10 @@ export default function Home() {
         style={{ animationDelay: "0.4s" }}
       >
         <Link href="/about" prefetch={false} className="text-muted-foreground hover:text-foreground transition-colors">
-          About
+          {isEs ? "Acerca de" : "About"}
         </Link>
         <Link href="/api/hello" prefetch={false} className="text-muted-foreground hover:text-foreground transition-colors">
-          API route
+          {isEs ? "Ruta API" : "API route"}
         </Link>
         <a href="https://github.com/cloudflare/vinext" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
           Vinext

@@ -10,10 +10,12 @@ export default function ErrorBoundary({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const isEs = typeof document !== "undefined" && document.documentElement.lang.startsWith("es");
+
   return (
     <div className="rounded-lg border border-rose/30 bg-rose/[0.06] p-8 text-center">
       <h2 className="text-xl font-bold text-rose mb-2">
-        Algo salió mal
+        {isEs ? "Algo salió mal" : "Something went wrong"}
       </h2>
       <p className="text-sm text-rose/80 mb-1">{error.message}</p>
       {error.digest && (
@@ -23,7 +25,7 @@ export default function ErrorBoundary({
       )}
       <Button variant="destructive" size="sm" onClick={reset} className="mt-3">
         <RotateCcw className="size-3.5" />
-        Reintentar
+        {isEs ? "Reintentar" : "Retry"}
       </Button>
     </div>
   );

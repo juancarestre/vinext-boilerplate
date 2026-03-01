@@ -8,8 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Plus, RefreshCw, Trash2, X } from "lucide-react";
 import type { CreateUser } from "@vinext-boilerplate/shared";
+import type { Locale } from "@/lib/i18n";
 
-export default function UserManager() {
+export default function UserManager({ locale }: { locale: Locale }) {
+  const isEs = locale === "es";
   const [showForm, setShowForm] = useState(false);
 
   const users = trpc.users.list.useQuery();
@@ -44,7 +46,7 @@ export default function UserManager() {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">Usuarios</CardTitle>
+          <CardTitle className="text-base">{isEs ? "Usuarios" : "Users"}</CardTitle>
           <div className="flex gap-1.5">
             <Button
               variant="ghost"
@@ -55,7 +57,7 @@ export default function UserManager() {
               <RefreshCw
                 className={`size-3 ${users.isFetching ? "animate-spin" : ""}`}
               />
-              Refetch
+              {isEs ? "Recargar" : "Refetch"}
             </Button>
             <Button
               variant={showForm ? "outline" : "default"}
@@ -65,11 +67,11 @@ export default function UserManager() {
             >
               {showForm ? (
                 <>
-                  <X className="size-3" /> Cancelar
+                  <X className="size-3" /> {isEs ? "Cancelar" : "Cancel"}
                 </>
               ) : (
                 <>
-                  <Plus className="size-3" /> Crear
+                  <Plus className="size-3" /> {isEs ? "Crear" : "Create"}
                 </>
               )}
             </Button>
@@ -83,7 +85,7 @@ export default function UserManager() {
             onSubmit={handleCreate}
             className="flex flex-col gap-2 mb-4 p-3 rounded-md bg-muted/50 border border-border"
           >
-            <Input name="name" placeholder="Nombre" required minLength={2} />
+            <Input name="name" placeholder={isEs ? "Nombre" : "Name"} required minLength={2} />
             <Input name="email" type="email" placeholder="Email" required />
             <select
               name="role"
@@ -94,13 +96,13 @@ export default function UserManager() {
               <option value="viewer">Viewer</option>
             </select>
             <Button type="submit" size="sm" disabled={createUser.isPending} className="self-start">
-              {createUser.isPending ? "Creando..." : "Crear usuario"}
+              {createUser.isPending ? (isEs ? "Creando..." : "Creating...") : isEs ? "Crear usuario" : "Create user"}
             </Button>
           </form>
         )}
 
         {users.isLoading ? (
-          <p className="text-sm text-muted-foreground py-4">Cargando...</p>
+          <p className="text-sm text-muted-foreground py-4">{isEs ? "Cargando..." : "Loading..."}</p>
         ) : users.error ? (
           <p className="text-sm text-destructive py-4">Error: {users.error.message}</p>
         ) : (

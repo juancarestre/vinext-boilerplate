@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { TRPCProvider } from "@/lib/trpc-react";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { getLocale } from "@/lib/i18n-server";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,13 +10,15 @@ export const metadata: Metadata = {
     "Monorepo: Vinext frontend + Hono/tRPC backend on Cloudflare Workers",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+
   return (
-    <html lang="en" className="dark">
+    <html lang={locale} className="dark">
       <head>
         <link
           rel="preconnect"
@@ -31,7 +35,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-background noise-overlay">
-        <TRPCProvider>{children}</TRPCProvider>
+        <TRPCProvider>
+          <div className="fixed right-4 top-4 z-40">
+            <LanguageSwitcher locale={locale} />
+          </div>
+          {children}
+        </TRPCProvider>
       </body>
     </html>
   );

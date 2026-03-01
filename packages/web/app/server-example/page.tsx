@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PageShell, SectionExplainer } from "@/components/page-shell";
+import { getLocale } from "@/lib/i18n-server";
 
 let lastFetchTime = 0;
 
@@ -35,31 +36,37 @@ export const metadata = {
 };
 
 export default async function ServerExamplePage() {
+  const locale = await getLocale();
+  const isEs = locale === "es";
   const data = await getServerData();
 
   const rows = [
-    { label: "Hora del servidor", value: data.serverTime },
+    { label: isEs ? "Hora del servidor" : "Server time", value: data.serverTime },
     { label: "Node.js version", value: data.nodeVersion },
-    { label: "Plataforma", value: data.platform },
+    { label: isEs ? "Plataforma" : "Platform", value: data.platform },
     { label: "Process ID", value: String(data.pid) },
-    { label: "Memoria RSS", value: `${data.memoryUsage} MB` },
+    { label: isEs ? "Memoria RSS" : "RSS memory", value: `${data.memoryUsage} MB` },
     { label: "NODE_ENV", value: data.env },
-    { label: "Tiempo de query", value: `${data.queryTime} ms` },
+    { label: isEs ? "Tiempo de query" : "Query time", value: `${data.queryTime} ms` },
   ];
 
   return (
     <PageShell
       title="Server Component"
+      locale={locale}
       accentColor="oklch(0.7 0.17 160)"
       description={
         <>
-          Este componente se ejecuta <strong>solo en el servidor</strong>. No se
-          envía JavaScript al navegador para este componente.
+          {isEs ? "Este componente se ejecuta " : "This component runs "}
+          <strong>{isEs ? "solo en el servidor" : "only on the server"}</strong>.
+          {isEs
+            ? " No se envía JavaScript al navegador para este componente."
+            : " No JavaScript is sent to the browser for this component."}
         </>
       }
     >
       <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-        Datos obtenidos en el servidor
+        {isEs ? "Datos obtenidos en el servidor" : "Data fetched on the server"}
       </h2>
 
       <div className="rounded-lg border border-border bg-card overflow-hidden">
@@ -77,13 +84,22 @@ export default async function ServerExamplePage() {
       </div>
 
       <SectionExplainer
-        title="Por que Server Component?"
+        locale={locale}
+        title={isEs ? "¿Por qué Server Component?" : "Why Server Component?"}
         items={[
-          <>Acceso directo a <code className="font-mono text-xs">process.env</code>, filesystem, base de datos</>,
-          <>Zero KB de JavaScript enviado al cliente para este componente</>,
-          <>Datos sensibles (API keys, queries) nunca llegan al navegador</>,
-          <>Puede usar <code className="font-mono text-xs">async/await</code> directamente en el componente</>,
-          <>Recarga la pagina para ver como cambia la hora y el PID</>,
+          <>
+            {isEs ? "Acceso directo a " : "Direct access to "}
+            <code className="font-mono text-xs">process.env</code>
+            {isEs ? ", filesystem y base de datos" : ", filesystem, and databases"}
+          </>,
+          <>{isEs ? "Cero KB de JavaScript enviado al cliente para este componente" : "Zero KB of JavaScript sent to the client for this component"}</>,
+          <>{isEs ? "Datos sensibles (API keys, queries) nunca llegan al navegador" : "Sensitive data (API keys, queries) never reaches the browser"}</>,
+          <>
+            {isEs ? "Puedes usar " : "You can use "}
+            <code className="font-mono text-xs">async/await</code>
+            {isEs ? " directamente en el componente" : " directly in the component"}
+          </>,
+          <>{isEs ? "Recarga la página para ver cómo cambia la hora y el PID" : "Reload the page to see time and PID change"}</>,
         ]}
       />
 
@@ -93,7 +109,7 @@ export default async function ServerExamplePage() {
           prefetch={false}
           className="text-sm text-primary hover:underline"
         >
-          Ver Client Component &rarr;
+          {isEs ? "Ver Client Component \u2192" : "See Client Component \u2192"}
         </Link>
       </div>
     </PageShell>

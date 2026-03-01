@@ -4,8 +4,12 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SectionExplainer } from "@/components/page-shell";
 import { Minus, Plus, RotateCcw } from "lucide-react";
+import type { Locale } from "@/lib/i18n";
 
-export default function Counter() {
+export default function Counter({ locale }: { locale: Locale }) {
+  const isEs = locale === "es";
+  const dateLocale = isEs ? "es-ES" : "en-US";
+
   const [count, setCount] = useState(0);
   const [clicks, setClicks] = useState<number[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -29,24 +33,26 @@ export default function Counter() {
 
   const rows = [
     {
-      label: "Hidratado?",
-      value: mounted ? "Si" : "No (SSR)",
+      label: isEs ? "¿Hidratado?" : "Hydrated?",
+      value: mounted ? (isEs ? "Sí" : "Yes") : "No (SSR)",
       valueClass: mounted ? "text-emerald" : "text-rose",
     },
     {
-      label: "User Agent",
+      label: isEs ? "Agente de usuario" : "User Agent",
       value: mounted ? navigator.userAgent.split(" ").slice(-2).join(" ") : "...",
     },
     {
-      label: "Ventana",
+      label: isEs ? "Ventana" : "Window",
       value: mounted ? `${windowSize.w} x ${windowSize.h}` : "...",
     },
     {
-      label: "Ultimos clicks",
+      label: isEs ? "Últimos clics" : "Recent clicks",
       value:
         clicks.length > 0
-          ? clicks.map((t) => new Date(t).toLocaleTimeString()).join(", ")
-          : "ninguno",
+          ? clicks.map((t) => new Date(t).toLocaleTimeString(dateLocale)).join(", ")
+          : isEs
+            ? "ninguno"
+            : "none",
     },
   ];
 
@@ -55,7 +61,7 @@ export default function Counter() {
       {/* Counter */}
       <div className="rounded-lg border border-border bg-card p-8 text-center mb-4">
         <p className="text-sm text-muted-foreground mb-2">
-          Contador (useState + onClick)
+          {isEs ? "Contador (useState + onClick)" : "Counter (useState + onClick)"}
         </p>
         <p className="text-5xl font-extrabold tabular-nums my-4">{count}</p>
         <div className="flex gap-2 justify-center">
@@ -103,20 +109,22 @@ export default function Counter() {
       </div>
 
       <SectionExplainer
-        title="Por que Client Component?"
+        locale={locale}
+        title={isEs ? "¿Por qué Client Component?" : "Why Client Component?"}
         items={[
           <>
-            Necesitas <code className="font-mono text-xs">useState</code>,{" "}
+            {isEs ? "Necesitas " : "You need "}
+            <code className="font-mono text-xs">useState</code>,{" "}
             <code className="font-mono text-xs">useEffect</code>, o event handlers
           </>,
           <>
-            Acceso a APIs del navegador (
+            {isEs ? "Acceso a APIs del navegador (" : "Access to browser APIs ("}
             <code className="font-mono text-xs">window</code>,{" "}
             <code className="font-mono text-xs">navigator</code>)
           </>,
-          <>Interactividad en tiempo real sin recargar</>,
-          <>El JavaScript de este componente SI se envía al navegador</>,
-          <>Se hidrata sobre el HTML que el servidor pre-renderizó</>,
+          <>{isEs ? "Interactividad en tiempo real sin recargar" : "Real-time interactivity without reloads"}</>,
+          <>{isEs ? "El JavaScript de este componente sí se envía al navegador" : "This component's JavaScript is sent to the browser"}</>,
+          <>{isEs ? "Se hidrata sobre el HTML pre-renderizado del servidor" : "It hydrates on top of server pre-rendered HTML"}</>,
         ]}
       />
     </div>

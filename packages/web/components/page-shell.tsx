@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Locale } from "@/lib/i18n";
 
 export function PageShell({
   children,
@@ -7,13 +8,17 @@ export function PageShell({
   description,
   accentColor,
   backHref = "/",
+  locale = "en",
 }: {
   children: React.ReactNode;
   title: string;
   description?: React.ReactNode;
   accentColor?: string;
   backHref?: string;
+  locale?: Locale;
 }) {
+  const backLabel = locale === "es" ? "Volver" : "Back";
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 animate-fade-in">
       <Link
@@ -22,7 +27,7 @@ export function PageShell({
         className="group inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
       >
         <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
-        Back
+        {backLabel}
       </Link>
 
       <h1 className="text-3xl font-bold tracking-tight mb-2">{title}</h1>
@@ -46,15 +51,19 @@ export function PageShell({
 }
 
 export function SectionExplainer({
-  title = "Que demuestra esto?",
+  title,
   items,
+  locale = "en",
 }: {
   title?: string;
   items: React.ReactNode[];
+  locale?: Locale;
 }) {
+  const resolvedTitle = title ?? (locale === "es" ? "¿Qué demuestra esto?" : "What does this show?");
+
   return (
     <section className="mt-10 rounded-lg border border-border bg-card/50 p-5">
-      <h3 className="text-sm font-semibold mb-3">{title}</h3>
+      <h3 className="text-sm font-semibold mb-3">{resolvedTitle}</h3>
       <ul className="space-y-1.5 text-sm text-muted-foreground">
         {items.map((item, i) => (
           <li key={i} className="flex gap-2">

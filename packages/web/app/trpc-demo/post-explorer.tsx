@@ -5,8 +5,10 @@ import { trpc } from "@/lib/trpc-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import type { Locale } from "@/lib/i18n";
 
-export default function PostExplorer() {
+export default function PostExplorer({ locale }: { locale: Locale }) {
+  const isEs = locale === "es";
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
   const posts = trpc.posts.list.useQuery();
@@ -17,12 +19,12 @@ export default function PostExplorer() {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">Posts</CardTitle>
+        <CardTitle className="text-base">{isEs ? "Posts" : "Posts"}</CardTitle>
       </CardHeader>
 
       <CardContent>
         {posts.isLoading ? (
-          <p className="text-sm text-muted-foreground py-4">Cargando...</p>
+          <p className="text-sm text-muted-foreground py-4">{isEs ? "Cargando..." : "Loading..."}</p>
         ) : posts.error ? (
           <p className="text-sm text-destructive py-4">
             Error: {posts.error.message}
@@ -55,9 +57,9 @@ export default function PostExplorer() {
                               : "text-amber bg-amber/10"
                           }`}
                         >
-                          {post.published ? "Publicado" : "Borrador"}
+                          {post.published ? (isEs ? "Publicado" : "Published") : isEs ? "Borrador" : "Draft"}
                         </Badge>
-                        {new Date(post.createdAt).toLocaleDateString()}
+                        {new Date(post.createdAt).toLocaleDateString(isEs ? "es-ES" : "en-US")}
                       </div>
                     </div>
                     {isSelected ? (
@@ -76,7 +78,7 @@ export default function PostExplorer() {
           <div className="mt-3 rounded-md border border-sky/20 bg-sky/[0.04] p-4">
             {postDetail.isLoading ? (
               <p className="text-sm text-sky animate-pulse">
-                Cargando detalle via{" "}
+                {isEs ? "Cargando detalle vía " : "Loading details via "}
                 <code className="font-mono text-xs">
                   trpc.posts.getBySlug.useQuery(&quot;{selectedSlug}&quot;)
                 </code>

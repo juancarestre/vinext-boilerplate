@@ -1,24 +1,34 @@
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import Counter from "./counter";
+import { getLocale } from "@/lib/i18n-server";
 
 export const metadata = {
   title: "Client Component | Vinext Boilerplate",
 };
 
-export default function ClientExamplePage() {
+export default async function ClientExamplePage() {
+  const locale = await getLocale();
+  const isEs = locale === "es";
+
   return (
     <PageShell
       title="Client Component"
+      locale={locale}
       accentColor="oklch(0.65 0.18 295)"
       description={
         <>
-          Este componente tiene <code className="font-mono text-xs">&quot;use client&quot;</code>{" "}
-          — se hidrata en el <strong>navegador</strong> con interactividad completa.
+          {isEs ? "Este componente tiene " : "This component has "}
+          <code className="font-mono text-xs">&quot;use client&quot;</code>{" "}
+          {isEs
+            ? "— se hidrata en el "
+            : "— it hydrates in the "}
+          <strong>{isEs ? "navegador" : "browser"}</strong>
+          {isEs ? " con interactividad completa." : " with full interactivity."}
         </>
       }
     >
-      <Counter />
+      <Counter locale={locale} />
 
       <div className="mt-6">
         <Link
@@ -26,7 +36,7 @@ export default function ClientExamplePage() {
           prefetch={false}
           className="text-sm text-primary hover:underline"
         >
-          &larr; Ver Server Component
+          {isEs ? "\u2190 Ver Server Component" : "\u2190 See Server Component"}
         </Link>
       </div>
     </PageShell>
