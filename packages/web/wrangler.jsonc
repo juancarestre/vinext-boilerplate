@@ -13,6 +13,12 @@
   "routes": [
     { "pattern": "vinext.peto.dev", "custom_domain": true }
   ],
+  "services": [
+    {
+      "binding": "API_SERVICE",
+      "service": "vinext-boilerplate-api"
+    }
+  ],
   // vinext provides a built-in entry point for App Router
   "main": "vinext/server/app-router-entry",
   "assets": {

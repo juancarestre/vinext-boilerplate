@@ -2,6 +2,7 @@ import { api } from "@/lib/trpc";
 import { PageShell, SectionExplainer } from "@/components/page-shell";
 import UserManager from "./user-manager";
 import PostExplorer from "./post-explorer";
+import TransportSwitch from "./transport-switch";
 import { getLocale } from "@/lib/i18n-server";
 
 export const metadata = {
@@ -98,6 +99,7 @@ export default async function TrpcDemoPage() {
           {isEs ? "— cache, refetch automático, mutations type-safe." : "— caching, automatic refetch, type-safe mutations."}
         </p>
 
+        <TransportSwitch locale={locale} />
         <UserManager locale={locale} />
         <div className="mt-3">
           <PostExplorer locale={locale} />
