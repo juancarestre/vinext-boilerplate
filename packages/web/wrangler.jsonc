@@ -3,6 +3,9 @@
   "name": "vinext-boilerplate-web",
   "compatibility_date": "2026-02-01",
   "compatibility_flags": ["nodejs_compat_v2"],
+  "routes": [
+    { "pattern": "vinext.peto.dev", "custom_domain": true }
+  ],
   // vinext provides a built-in entry point for App Router
   "main": "vinext/server/app-router-entry",
   "assets": {

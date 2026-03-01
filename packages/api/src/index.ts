@@ -12,7 +12,13 @@ app.use("*", logger());
 app.use(
   "*",
   cors({
-    origin: ["http://localhost:3000", "http://localhost:5173"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "https://vinext.peto.dev",
+      "https://vinext-boilerplate-api.peto.workers.dev",
+      "https://vinext-api.peto.dev",
+    ],
     allowMethods: ["GET", "POST", "OPTIONS"],
     allowHeaders: ["Content-Type"],
   })
