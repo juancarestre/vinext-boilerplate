@@ -12,8 +12,12 @@ export default function GuestbookForm({ locale }: { locale: Locale }) {
   const formRef = useRef<HTMLFormElement>(null);
 
   async function handleSubmit(formData: FormData) {
-    await addMessage(formData);
-    formRef.current?.reset();
+    try {
+      await addMessage(formData);
+      formRef.current?.reset();
+    } finally {
+      window.location.assign(window.location.pathname);
+    }
   }
 
   return (
