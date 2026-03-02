@@ -1,5 +1,3 @@
-"use server";
-
 // Server Actions — funciones que se ejecutan en el servidor
 // pero se pueden llamar directamente desde el cliente (sin API routes)
 
@@ -27,6 +25,8 @@ export async function getMessages(): Promise<Message[]> {
 }
 
 export async function addMessage(formData: FormData): Promise<void> {
+  "use server";
+
   const text = formData.get("text") as string;
   const author = formData.get("author") as string;
 
@@ -50,6 +50,8 @@ export async function addMessage(formData: FormData): Promise<void> {
 }
 
 export async function deleteMessage(formData: FormData): Promise<void> {
+  "use server";
+
   const id = formData.get("id") as string;
   const index = messages.findIndex((m) => m.id === id);
 
