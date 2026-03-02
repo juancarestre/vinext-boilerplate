@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef } from "react";
 import { addMessage } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,10 +9,21 @@ import type { Locale } from "@/lib/i18n";
 
 export default function GuestbookForm({ locale }: { locale: Locale }) {
   const isEs = locale === "es";
+  const formRef = useRef<HTMLFormElement>(null);
+
+  async function handleSubmit(formData: FormData) {
+    try {
+      await addMessage(formData);
+      formRef.current?.reset();
+    } finally {
+      window.location.assign(window.location.pathname);
+    }
+  }
 
   return (
     <form
-      action={addMessage}
+      ref={formRef}
+      action={handleSubmit}
       className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4 mb-4"
     >
       <Input name="author" placeholder={isEs ? "Tu nombre" : "Your name"} required />
