@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -29,20 +30,34 @@ const TrpcTransportContext = createContext<TrpcTransportContextValue | null>(nul
 
 export function TRPCProvider({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
-  const [mode, setMode] = useState<ClientTransportMode>("external");
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(TRANSPORT_MODE_KEY);
-    if (stored === "external" || stored === "binding-proxy") {
-      setMode(stored);
+  const [mode, setMode] = useState<ClientTransportMode>(() => {
+    if (typeof window === "undefined") {
+      return "external";
     }
-  }, []);
+
+    const stored = window.localStorage.getItem(TRANSPORT_MODE_KEY);
+    return stored === "external" || stored === "binding-proxy"
+      ? stored
+      : "external";
+  });
+
+  const updateMode = useCallback((nextMode: ClientTransportMode) => {
+    setMode((prevMode) => {
+      if (prevMode === nextMode) {
+        return prevMode;
+      }
+
+      window.localStorage.setItem(TRANSPORT_MODE_KEY, nextMode);
+      // Ensure queries are re-run through the selected transport only when
+      // transport actually changes (avoids clearing initial in-flight queries).
+      queryClient.clear();
+      return nextMode;
+    });
+  }, [queryClient]);
 
   useEffect(() => {
     window.localStorage.setItem(TRANSPORT_MODE_KEY, mode);
-    // Ensure queries are re-run through the selected transport.
-    queryClient.clear();
-  }, [mode, queryClient]);
+  }, [mode]);
 
   const trpcClient = useMemo(
     () =>
@@ -55,9 +70,9 @@ export function TRPCProvider({ children }: { children: ReactNode }) {
   const transportValue = useMemo<TrpcTransportContextValue>(
     () => ({
       mode,
-      setMode,
+      setMode: updateMode,
     }),
-    [mode]
+    [mode, updateMode]
   );
 
   return (
