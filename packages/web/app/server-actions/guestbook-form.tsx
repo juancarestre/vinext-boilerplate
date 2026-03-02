@@ -12,8 +12,14 @@ export default function GuestbookForm({ locale }: { locale: Locale }) {
   const formRef = useRef<HTMLFormElement>(null);
 
   async function handleSubmit(formData: FormData) {
-    await addMessage(formData);
-    formRef.current?.reset();
+    try {
+      await addMessage(formData);
+      formRef.current?.reset();
+    } finally {
+      // Work around occasional client-side RSC refresh crashes after actions:
+      // force a full navigation so the updated guestbook renders reliably.
+      window.location.assign(window.location.pathname);
+    }
   }
 
   return (
